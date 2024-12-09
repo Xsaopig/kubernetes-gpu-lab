@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inference
+  template:
+    metadata:
+      labels:
+        app: inference
+    spec:
+      containers:
+      - name: inference
+        image: <your-registry>/yolov5-inference:latest
+        ports:
+        - containerPort: 8501
+        resources:
+          requests:
+            nvidia.com/gpu: 1        # 请求 1 个 GPU
+            cpu: "500m"             # 请求 0.5 个 CPU
+            memory: "1Gi"           # 请求 1Gi 内存
+          limits:
+            nvidia.com/gpu: 1        # 限制为 1 个 GPU
+            cpu: "1"                # 限制使用 1 个 CPU
+            memory: "2Gi"           # 限制使用 2Gi 内存
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference
+spec:
+  selector:
+    app: inference
+  ports:
+  - protocol: TCP
+    port: 8501
+    targetPort: 8501
+  type: ClusterIP

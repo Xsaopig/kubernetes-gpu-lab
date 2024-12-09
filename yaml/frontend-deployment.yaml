@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: registry.cn-beijing.aliyuncs.com/xsaopig/frontend:latest
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: "250m"             # 请求 0.25 个 CPU
+            memory: "512Mi"         # 请求 512Mi 内存
+          limits:
+            cpu: "500m"             # 限制使用 0.5 个 CPU
+            memory: "1Gi"           # 限制使用 1Gi 内存
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: LoadBalancer
