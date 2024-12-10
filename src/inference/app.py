@@ -5,10 +5,14 @@ import io
 
 app = Flask(__name__)
 
-# Load YOLOv5 model
-MODEL_PATH = "./models/yolov5s.pt"
+# 检查是否有可用的 GPU
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(f'Using device: {device}')
+
+# 加载模型
+MODEL_PATH = "./models/yolov5n.pt"
 model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH)
-model.eval()
+model.to(device)  # 将模型移到 GPU
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -16,13 +20,16 @@ def predict():
         return jsonify({"error": "No image uploaded"}), 400
 
     image_file = request.files['image']
-    image = Image.open(io.BytesIO(image_file.read()))
+    image = Image.open(io.BytesIO(image_file.read())).convert('RGB')
 
-    # Perform inference
+    # 将输入图像转移到 GPU
+    # image = image.to(device)
+
+    # 执行推理
     results = model(image)
 
-    # Process results
-    detections = results.xyxy[0].tolist()  # Bounding boxes
+    # 处理推理结果
+    detections = results.xyxy[0].tolist()
     output = []
     for detection in detections:
         x_min, y_min, x_max, y_max, confidence, class_id = detection
