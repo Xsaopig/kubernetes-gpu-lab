@@ -8,10 +8,10 @@ RUN apt-get update && apt-get install -y \
     wget \
     && apt-get clean
 
-# 安装支持 CUDA 12.1 的 PyTorch 及其他依赖
+# 安装支持 cpu 的 PyTorch 及其他依赖
 RUN pip install --no-cache-dir \
     torch torchvision torchaudio \
-    --index-url https://download.pytorch.org/whl/cu121
+    --index-url https://download.pytorch.org/whl/cpu
 
 # 安装其他依赖，包括 ultralytics 和 flask
 RUN pip install --no-cache-dir \
@@ -24,7 +24,7 @@ RUN pip install -r requirements.txt
 # 复制模型和代码
 WORKDIR /app
 COPY models/ ./models
-COPY app.py ./app.py
+COPY app_cpu.py ./app.py
 
 # 暴露 Flask 应用的端口
 EXPOSE 8501
