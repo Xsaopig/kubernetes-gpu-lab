@@ -2,7 +2,7 @@ import random
 from locust import HttpUser, LoadTestShape, TaskSet, constant, task , events
 
 class UserTasks(TaskSet):
-    @task
+    @task(1)
     def upload_image(self):
         # 指定文件路径
         file_path = "/data/zhx/kubernetes-gpu-lab/data/bus.jpg"
@@ -14,13 +14,26 @@ class UserTasks(TaskSet):
             if response.status_code != 200:
                 print(f"Upload failed: {response.status_code}, {response.text}")
 
+    @task(1)
+    def upload_image(self):
+        # 指定文件路径
+        file_path = "/data/zhx/kubernetes-gpu-lab/data/zidane.jpg"
+        # 打开文件并发送 POST 请求
+        with open(file_path, "rb") as image_file:
+            files = {"image": image_file}
+            response = self.client.post("/upload", files=files)
+            # 可选：记录响应内容
+            if response.status_code != 200:
+                print(f"Upload failed: {response.status_code}, {response.text}")
+    
+
 class WebsiteUser(HttpUser):
     wait_time = constant(0.5)
     tasks = [UserTasks]
 
 class StagesShapeWithCustomUsers(LoadTestShape):
     stages = [
-        {"duration": 300, "users": 10, "spawn_rate": 1},
+        {"duration": 300, "users": 1000, "spawn_rate": 10},
         # {"duration": 300, "users": 200, "spawn_rate": 10},
         # {"duration": 300, "users": 50, "spawn_rate": 10},
         # {"duration": 300000, "users": 100, "spawn_rate": 50},
