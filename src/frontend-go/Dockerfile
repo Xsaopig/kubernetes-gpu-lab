@@ -1,4 +1,4 @@
-FROM m.daocloud.io/docker.io/library/alpine:latest
+FROM alpine:latest
 
 # 安装glibc
 RUN apk --no-cache add \
