@@ -2,16 +2,18 @@ from flask import Flask, request, jsonify
 import torch
 from PIL import Image
 import io
+# from ultralytics import YOLO
 
 app = Flask(__name__)
 
 # 检查是否有可用的 GPU
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
 print(f'Using device: {device}')
 
 # 加载模型
 MODEL_PATH = "./models/yolov5n.pt"
-model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH)
+model = torch.hub.load('./yolov5-master', 'custom', source='local', path=MODEL_PATH)
+# model = YOLO(MODEL_PATH)
 model.to(device)  # 将模型移到 GPU
 
 @app.route("/predict", methods=["POST"])
@@ -21,9 +23,6 @@ def predict():
 
     image_file = request.files['image']
     image = Image.open(io.BytesIO(image_file.read())).convert('RGB')
-
-    # 将输入图像转移到 GPU
-    # image = image.to(device)
 
     # 执行推理
     results = model(image)
