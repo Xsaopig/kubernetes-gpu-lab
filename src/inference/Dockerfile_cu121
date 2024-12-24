@@ -24,7 +24,7 @@ RUN pip install -r requirements.txt
 # 复制模型和代码
 WORKDIR /app
 COPY models/ ./models
-COPY app.py ./app.py
+COPY app_cu121.py ./app.py
 
 # 暴露 Flask 应用的端口
 EXPOSE 8501
