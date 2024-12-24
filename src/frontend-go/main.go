@@ -12,9 +12,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const INFERENCE_URL = "http://localhost:8501/predict"
+// const INFERENCE_URL = "http://localhost:8501/predict"
 
-// const INFERENCE_URL = "http://inference:8501/predict"
+const INFERENCE_URL = "http://inference:8501/predict"
 
 // 上传文件的 handler
 func upload(c *gin.Context) {
