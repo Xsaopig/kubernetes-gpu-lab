@@ -22,7 +22,7 @@ spec:
         nvidia.com/cuda.runtime-version.full: "12.1"
       containers:
       - name: inference
-        image: registry.cn-beijing.aliyuncs.com/xsaopig/yolov5-inference:latest
+        image: registry.cn-beijing.aliyuncs.com/xsaopig/yolov5-inference-cu121
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8501

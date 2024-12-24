@@ -21,10 +21,10 @@ spec:
         gpu-node: "true"
       containers:
       - name: frontend
-        image: registry.cn-beijing.aliyuncs.com/xsaopig/frontend:latest
+        image: registry.cn-beijing.aliyuncs.com/xsaopig/frontend-go
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 5000
+        - containerPort: 6999
         resources:
           requests:
             cpu: "250m"             # 请求 0.25 个 CPU
@@ -43,6 +43,6 @@ spec:
     app: frontend
   ports:
   - protocol: TCP
-    port: 5000
-    targetPort: 5000
+    port: 6999
+    targetPort: 6999
   type: NodePort
